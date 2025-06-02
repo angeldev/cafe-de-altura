@@ -3,17 +3,17 @@ package com.gammatech.coffee.controller;
 import com.gammatech.coffee.entity.Order;
 import com.gammatech.coffee.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
 
     private final OrderService orderService;
+    private static final int PAGE_SIZE = 3;
 
     @Autowired
     public OrderController(OrderService orderService) {
@@ -32,9 +32,10 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders() {
+    public ResponseEntity<PageResponse<Order>> getAllOrders(
+            @RequestParam(defaultValue = "0") int page) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(orderService.getAllOrders());
+                .body(new PageResponse<>(orderService.getAllOrders(PageRequest.of(page, PAGE_SIZE))));
     }
 
     @GetMapping("/{id}")

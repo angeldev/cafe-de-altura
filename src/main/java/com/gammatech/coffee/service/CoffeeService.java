@@ -3,9 +3,9 @@ package com.gammatech.coffee.service;
 import com.gammatech.coffee.entity.Coffee;
 import com.gammatech.coffee.repository.CoffeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,10 +18,8 @@ public class CoffeeService {
         this.coffeeRepository = coffeeRepository;
     }
 
-    public List<Coffee> getAllCoffees() {
-        List<Coffee> coffees = new ArrayList<>();
-        coffeeRepository.findAll().forEach(coffees::add);
-        return coffees;
+    public Page<Coffee> getAllCoffees(Pageable pageable) {
+        return coffeeRepository.findAll(pageable);
     }
 
     public Coffee addCoffee(Coffee coffee) {
